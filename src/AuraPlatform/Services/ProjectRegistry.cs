@@ -66,8 +66,8 @@ public class ProjectRegistry
             {
                 Id = "P6",
                 Name = "aura-platform",
-                Description = "Management portal & dashboard",
-                Subdomain = "aura",
+                Description = "Portfolio dashboard & service monitor",
+                Subdomain = "portfolio",
                 Stack = ".NET 8 / Blazor Server",
                 Port = 8006
             }
