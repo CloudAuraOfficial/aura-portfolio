@@ -1,0 +1,94 @@
+@page "/projects"
+@using AuraPlatform.Models
+@using AuraPlatform.Services
+@inject ProjectStatusService StatusService
+@implements IDisposable
+
+<PageTitle>Projects - CloudAura</PageTitle>
+
+<h1>Projects</h1>
+<p class="text-muted">All services in the CloudAura portfolio</p>
+
+<div class="table-responsive mt-4">
+    <table class="table table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Stack</th>
+                <th>Subdomain</th>
+                <th>Status</th>
+                <th>Response</th>
+                <th>Last Checked</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var status in statuses)
+            {
+                <tr class="cursor-pointer" @onclick="() => Navigate(status.Project.Id)">
+                    <td><strong>@status.Project.Id</strong></td>
+                    <td>@status.Project.Name</td>
+                    <td><code>@status.Project.Stack</code></td>
+                    <td>@status.Project.Subdomain</td>
+                    <td><span class="badge @GetBadgeClass(status.Health)">@status.Health</span></td>
+                    <td>@(status.ResponseTimeMs.HasValue ? $"{status.ResponseTimeMs}ms" : "—")</td>
+                    <td>@FormatLastChecked(status.LastChecked)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    private IReadOnlyList<ProjectStatus> statuses = Array.Empty<ProjectStatus>();
+
+    protected override void OnInitialized()
+    {
+        RefreshStatuses();
+        StatusService.OnStatusChanged += HandleStatusChanged;
+    }
+
+    private void HandleStatusChanged()
+    {
+        InvokeAsync(() =>
+        {
+            RefreshStatuses();
+            StateHasChanged();
+        });
+    }
+
+    private void RefreshStatuses()
+    {
+        statuses = StatusService.GetAllStatuses().Values.ToList();
+    }
+
+    private void Navigate(string projectId)
+    {
+        Navigation.NavigateTo($"projects/{projectId}");
+    }
+
+    private static string GetBadgeClass(HealthState health) => health switch
+    {
+        HealthState.Healthy => "bg-success",
+        HealthState.Degraded => "bg-warning text-dark",
+        HealthState.Unhealthy => "bg-danger",
+        _ => "bg-secondary"
+    };
+
+    private static string FormatLastChecked(DateTimeOffset lastChecked)
+    {
+        if (lastChecked == DateTimeOffset.MinValue)
+            return "Never";
+        var ago = DateTimeOffset.UtcNow - lastChecked;
+        if (ago.TotalSeconds < 60)
+            return $"{(int)ago.TotalSeconds}s ago";
+        return $"{(int)ago.TotalMinutes}m ago";
+    }
+
+    public void Dispose()
+    {
+        StatusService.OnStatusChanged -= HandleStatusChanged;
+    }
+}

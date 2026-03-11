@@ -1,0 +1,11 @@
+services:
+  aura-platform:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aura_platform
+    ports:
+      - "127.0.0.1:8006:8006"
+    env_file:
+      - .env
+    restart: unless-stopped

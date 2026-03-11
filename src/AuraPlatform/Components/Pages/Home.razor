@@ -1,0 +1,118 @@
+@page "/"
+@using AuraPlatform.Models
+@using AuraPlatform.Services
+@inject ProjectStatusService StatusService
+@implements IDisposable
+
+<PageTitle>CloudAura Dashboard</PageTitle>
+
+<h1>Portfolio Dashboard</h1>
+<p class="text-muted">Real-time status of all CloudAura services</p>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card summary-card bg-success text-white mb-3">
+            <div class="card-body text-center">
+                <h2>@healthyCount</h2>
+                <p class="mb-0">Healthy</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card summary-card bg-warning text-dark mb-3">
+            <div class="card-body text-center">
+                <h2>@degradedCount</h2>
+                <p class="mb-0">Degraded</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card summary-card bg-danger text-white mb-3">
+            <div class="card-body text-center">
+                <h2>@unhealthyCount</h2>
+                <p class="mb-0">Unhealthy</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card summary-card bg-secondary text-white mb-3">
+            <div class="card-body text-center">
+                <h2>@unknownCount</h2>
+                <p class="mb-0">Unknown</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mt-4">Services</h3>
+<div class="row mt-3">
+    @foreach (var status in statuses)
+    {
+        <div class="col-md-4 mb-3">
+            <a href="projects/@status.Project.Id" class="text-decoration-none">
+                <div class="card service-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title mb-0">@status.Project.Id</h5>
+                            <span class="badge @GetBadgeClass(status.Health)">@status.Health</span>
+                        </div>
+                        <h6 class="card-subtitle text-muted">@status.Project.Name</h6>
+                        <p class="card-text mt-2 small">@status.Project.Description</p>
+                        <div class="d-flex justify-content-between small text-muted">
+                            <span>@status.Project.Stack</span>
+                            @if (status.ResponseTimeMs.HasValue)
+                            {
+                                <span>@(status.ResponseTimeMs)ms</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+</div>
+
+@code {
+    private IReadOnlyList<ProjectStatus> statuses = Array.Empty<ProjectStatus>();
+    private int healthyCount;
+    private int degradedCount;
+    private int unhealthyCount;
+    private int unknownCount;
+
+    protected override void OnInitialized()
+    {
+        RefreshStatuses();
+        StatusService.OnStatusChanged += HandleStatusChanged;
+    }
+
+    private void HandleStatusChanged()
+    {
+        InvokeAsync(() =>
+        {
+            RefreshStatuses();
+            StateHasChanged();
+        });
+    }
+
+    private void RefreshStatuses()
+    {
+        statuses = StatusService.GetAllStatuses().Values.ToList();
+        healthyCount = statuses.Count(s => s.Health == HealthState.Healthy);
+        degradedCount = statuses.Count(s => s.Health == HealthState.Degraded);
+        unhealthyCount = statuses.Count(s => s.Health == HealthState.Unhealthy);
+        unknownCount = statuses.Count(s => s.Health == HealthState.Unknown);
+    }
+
+    private static string GetBadgeClass(HealthState health) => health switch
+    {
+        HealthState.Healthy => "bg-success",
+        HealthState.Degraded => "bg-warning text-dark",
+        HealthState.Unhealthy => "bg-danger",
+        _ => "bg-secondary"
+    };
+
+    public void Dispose()
+    {
+        StatusService.OnStatusChanged -= HandleStatusChanged;
+    }
+}

@@ -1,0 +1,168 @@
+@page "/projects/{ProjectId}"
+@using AuraPlatform.Models
+@using AuraPlatform.Services
+@inject ProjectStatusService StatusService
+@inject MetricsService MetricsService
+@implements IDisposable
+
+<PageTitle>@(status?.Project.Name ?? "Project") - CloudAura</PageTitle>
+
+@if (status is null)
+{
+    <h1>Project Not Found</h1>
+    <p>No project with ID <strong>@ProjectId</strong> exists.</p>
+    <a href="projects">Back to Projects</a>
+}
+else
+{
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="projects">Projects</a></li>
+            <li class="breadcrumb-item active">@status.Project.Id</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1>@status.Project.Name</h1>
+            <p class="text-muted">@status.Project.Description</p>
+        </div>
+        <span class="badge fs-6 @GetBadgeClass(status.Health)">@status.Health</span>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header"><strong>Service Info</strong></div>
+                <div class="card-body">
+                    <table class="table table-sm mb-0">
+                        <tbody>
+                            <tr><td class="text-muted">ID</td><td>@status.Project.Id</td></tr>
+                            <tr><td class="text-muted">Stack</td><td>@status.Project.Stack</td></tr>
+                            <tr><td class="text-muted">Subdomain</td><td>@status.Project.Subdomain</td></tr>
+                            <tr><td class="text-muted">Port</td><td>@(status.Project.Port > 0 ? status.Project.Port.ToString() : "N/A")</td></tr>
+                            <tr><td class="text-muted">Health URL</td><td><code>@(status.Project.HealthUrl ?? "Not configured")</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header"><strong>Health Status</strong></div>
+                <div class="card-body">
+                    <table class="table table-sm mb-0">
+                        <tbody>
+                            <tr><td class="text-muted">Status</td><td><span class="badge @GetBadgeClass(status.Health)">@status.Health</span></td></tr>
+                            <tr><td class="text-muted">Response Time</td><td>@(status.ResponseTimeMs.HasValue ? $"{status.ResponseTimeMs}ms" : "—")</td></tr>
+                            <tr><td class="text-muted">Last Checked</td><td>@FormatLastChecked(status.LastChecked)</td></tr>
+                            @if (status.ErrorMessage is not null)
+                            {
+                                <tr><td class="text-muted">Error</td><td class="text-danger">@status.ErrorMessage</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (metrics is not null)
+    {
+        <div class="row mt-2">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header"><strong>Metrics (Prometheus)</strong></div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <h4>@metrics.RequestsPerSecond.ToString("F2")</h4>
+                                <p class="text-muted">Requests/sec</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h4>@((metrics.ErrorRate * 100).ToString("F2"))%</h4>
+                                <p class="text-muted">Error Rate</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h4>@metrics.AvgResponseTimeMs.ToString("F1") ms</h4>
+                                <p class="text-muted">Avg Response</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (!MetricsService.IsAvailable)
+    {
+        <div class="alert alert-info mt-3">
+            Prometheus is not configured. Metrics are unavailable.
+        </div>
+    }
+}
+
+@code {
+    [Parameter] public string ProjectId { get; set; } = string.Empty;
+
+    private ProjectStatus? status;
+    private ServiceMetrics? metrics;
+
+    protected override async Task OnInitializedAsync()
+    {
+        RefreshStatus();
+        StatusService.OnStatusChanged += HandleStatusChanged;
+
+        if (status is not null && MetricsService.IsAvailable)
+        {
+            metrics = await MetricsService.GetServiceMetricsAsync(status.Project.Name);
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        RefreshStatus();
+
+        if (status is not null && MetricsService.IsAvailable)
+        {
+            metrics = await MetricsService.GetServiceMetricsAsync(status.Project.Name);
+        }
+    }
+
+    private void HandleStatusChanged()
+    {
+        InvokeAsync(() =>
+        {
+            RefreshStatus();
+            StateHasChanged();
+        });
+    }
+
+    private void RefreshStatus()
+    {
+        status = StatusService.GetStatus(ProjectId);
+    }
+
+    private static string GetBadgeClass(HealthState health) => health switch
+    {
+        HealthState.Healthy => "bg-success",
+        HealthState.Degraded => "bg-warning text-dark",
+        HealthState.Unhealthy => "bg-danger",
+        _ => "bg-secondary"
+    };
+
+    private static string FormatLastChecked(DateTimeOffset lastChecked)
+    {
+        if (lastChecked == DateTimeOffset.MinValue)
+            return "Never";
+        var ago = DateTimeOffset.UtcNow - lastChecked;
+        if (ago.TotalSeconds < 60)
+            return $"{(int)ago.TotalSeconds}s ago";
+        return $"{(int)ago.TotalMinutes}m ago";
+    }
+
+    public void Dispose()
+    {
+        StatusService.OnStatusChanged -= HandleStatusChanged;
+    }
+}

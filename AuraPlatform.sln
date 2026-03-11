@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6B8E4D0C-13A1-434C-ACD4-4D3335E6500B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuraPlatform", "src\AuraPlatform\AuraPlatform.csproj", "{7A218A9E-7ECE-4148-9F31-4BE1070E65BB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{150FA610-9B13-41D1-8C04-F661AFE0A7DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuraPlatform.Tests", "tests\AuraPlatform.Tests\AuraPlatform.Tests.csproj", "{A6695F5A-9001-4086-8ACE-B538D68C48C0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A218A9E-7ECE-4148-9F31-4BE1070E65BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A218A9E-7ECE-4148-9F31-4BE1070E65BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A218A9E-7ECE-4148-9F31-4BE1070E65BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A218A9E-7ECE-4148-9F31-4BE1070E65BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6695F5A-9001-4086-8ACE-B538D68C48C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6695F5A-9001-4086-8ACE-B538D68C48C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6695F5A-9001-4086-8ACE-B538D68C48C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6695F5A-9001-4086-8ACE-B538D68C48C0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7A218A9E-7ECE-4148-9F31-4BE1070E65BB} = {6B8E4D0C-13A1-434C-ACD4-4D3335E6500B}
+		{A6695F5A-9001-4086-8ACE-B538D68C48C0} = {150FA610-9B13-41D1-8C04-F661AFE0A7DE}
+	EndGlobalSection
+EndGlobal
