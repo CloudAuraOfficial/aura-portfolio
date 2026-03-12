@@ -10,11 +10,11 @@ RUN dotnet publish src/AuraPlatform/AuraPlatform.csproj -c Release -o /app/publi
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 
-EXPOSE 8006
+EXPOSE 8007
 
 COPY --from=build /app/publish .
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:8006/healthz || exit 1
+    CMD curl -f http://localhost:8007/healthz || exit 1
 
 ENTRYPOINT ["dotnet", "AuraPlatform.dll"]
