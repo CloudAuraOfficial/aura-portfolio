@@ -9,97 +9,257 @@
 
 @if (status is null)
 {
-    <h1>Project Not Found</h1>
-    <p>No project with ID <strong>@ProjectId</strong> exists.</p>
-    <a href="projects">Back to Projects</a>
+    <div class="project-not-found">
+        <h1>Project Not Found</h1>
+        <p>No project with ID <strong>@ProjectId</strong> exists.</p>
+        <a href="projects" class="back-link">&larr; Back to Projects</a>
+    </div>
 }
 else
 {
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="projects">Projects</a></li>
-            <li class="breadcrumb-item active">@status.Project.Id</li>
-        </ol>
+    var project = status.Project;
+
+    <nav aria-label="breadcrumb" class="detail-breadcrumb">
+        <a href="projects" class="back-link">&larr; All Projects</a>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current">@project.Id</span>
     </nav>
 
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
-            <h1>@status.Project.Name</h1>
-            <p class="text-muted">@status.Project.Description</p>
-        </div>
-        <span class="badge fs-6 @GetBadgeClass(status.Health)">@status.Health</span>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card mb-3">
-                <div class="card-header"><strong>Service Info</strong></div>
-                <div class="card-body">
-                    <table class="table table-sm mb-0">
-                        <tbody>
-                            <tr><td class="text-muted">ID</td><td>@status.Project.Id</td></tr>
-                            <tr><td class="text-muted">Stack</td><td>@status.Project.Stack</td></tr>
-                            <tr><td class="text-muted">Subdomain</td><td>@status.Project.Subdomain</td></tr>
-                            <tr><td class="text-muted">Port</td><td>@(status.Project.Port > 0 ? status.Project.Port.ToString() : "N/A")</td></tr>
-                            <tr><td class="text-muted">Health URL</td><td><code>@(status.Project.HealthUrl ?? "Not configured")</code></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card mb-3">
-                <div class="card-header"><strong>Health Status</strong></div>
-                <div class="card-body">
-                    <table class="table table-sm mb-0">
-                        <tbody>
-                            <tr><td class="text-muted">Status</td><td><span class="badge @GetBadgeClass(status.Health)">@status.Health</span></td></tr>
-                            <tr><td class="text-muted">Response Time</td><td>@(status.ResponseTimeMs.HasValue ? $"{status.ResponseTimeMs}ms" : "—")</td></tr>
-                            <tr><td class="text-muted">Last Checked</td><td>@FormatLastChecked(status.LastChecked)</td></tr>
-                            @if (status.ErrorMessage is not null)
-                            {
-                                <tr><td class="text-muted">Error</td><td class="text-danger">@status.ErrorMessage</td></tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+    <!-- Header -->
+    <div class="project-header">
+        <div class="project-header-left">
+            <span class="project-id-badge">@project.Id</span>
+            <h1 class="project-name">@project.Name</h1>
+            <p class="project-desc">@project.Description</p>
+            <div class="project-header-meta">
+                <span class="meta-tag stack">@project.Stack</span>
+                <span class="meta-tag badge-health @GetHealthCss(status.Health)">@status.Health</span>
+                @if (status.ResponseTimeMs.HasValue)
+                {
+                    <span class="meta-tag latency">@(status.ResponseTimeMs)ms</span>
+                }
             </div>
         </div>
     </div>
 
-    @if (metrics is not null)
-    {
-        <div class="row mt-2">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header"><strong>Metrics (Prometheus)</strong></div>
-                    <div class="card-body">
-                        <div class="row text-center">
-                            <div class="col-md-4">
-                                <h4>@metrics.RequestsPerSecond.ToString("F2")</h4>
-                                <p class="text-muted">Requests/sec</p>
+    <!-- Links -->
+    <div class="project-links-bar">
+        @if (project.LiveUrl is not null)
+        {
+            <a href="@project.LiveUrl" target="_blank" rel="noopener" class="project-link live">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                Live Site
+            </a>
+        }
+        @if (project.GithubUrl is not null)
+        {
+            <a href="@project.GithubUrl" target="_blank" rel="noopener" class="project-link github">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                GitHub
+            </a>
+        }
+    </div>
+
+    <div class="detail-sections">
+
+        <!-- The Problem -->
+        @if (!string.IsNullOrEmpty(project.Problem))
+        {
+            <section class="detail-section">
+                <div class="section-number">01</div>
+                <div class="section-content">
+                    <h2 class="section-heading">The Problem</h2>
+                    <p class="section-text">@project.Problem</p>
+                </div>
+            </section>
+        }
+
+        <!-- The Solution -->
+        @if (!string.IsNullOrEmpty(project.Solution))
+        {
+            <section class="detail-section">
+                <div class="section-number">02</div>
+                <div class="section-content">
+                    <h2 class="section-heading">The Solution</h2>
+                    <p class="section-text">@project.Solution</p>
+                </div>
+            </section>
+        }
+
+        <!-- Core Features -->
+        @if (project.CoreFeatures.Count > 0)
+        {
+            <section class="detail-section">
+                <div class="section-number">03</div>
+                <div class="section-content">
+                    <h2 class="section-heading">Core Features</h2>
+                    <ul class="feature-list">
+                        @foreach (var feature in project.CoreFeatures)
+                        {
+                            <li>@feature</li>
+                        }
+                    </ul>
+                </div>
+            </section>
+        }
+
+        <!-- Market Signals -->
+        @if (project.MarketSignals.Count > 0)
+        {
+            <section class="detail-section">
+                <div class="section-number">04</div>
+                <div class="section-content">
+                    <h2 class="section-heading">Market Signals</h2>
+                    <div class="signal-grid">
+                        @foreach (var signal in project.MarketSignals)
+                        {
+                            <div class="signal-card">
+                                <p>@signal</p>
                             </div>
-                            <div class="col-md-4">
-                                <h4>@((metrics.ErrorRate * 100).ToString("F2"))%</h4>
-                                <p class="text-muted">Error Rate</p>
-                            </div>
-                            <div class="col-md-4">
-                                <h4>@metrics.AvgResponseTimeMs.ToString("F1") ms</h4>
-                                <p class="text-muted">Avg Response</p>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
+            </section>
+        }
+
+        <!-- Build Progress -->
+        @if (project.BuildProgress.Count > 0)
+        {
+            <section class="detail-section">
+                <div class="section-number">05</div>
+                <div class="section-content">
+                    <h2 class="section-heading">Build Progress</h2>
+                    <div class="progress-summary">
+                        <span class="progress-count">@project.BuildProgress.Count(m => m.Completed) / @project.BuildProgress.Count</span>
+                        <span class="progress-label">milestones completed</span>
+                        <div class="progress-bar-track">
+                            <div class="progress-bar-fill" style="width: @(ProgressPercent(project))%"></div>
+                        </div>
+                    </div>
+                    <div class="milestone-list">
+                        @foreach (var milestone in project.BuildProgress)
+                        {
+                            <div class="milestone @(milestone.Completed ? "done" : "pending")">
+                                <span class="milestone-icon">@(milestone.Completed ? "\u2713" : "\u25CB")</span>
+                                <span class="milestone-label">@milestone.Label</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+
+        <!-- Tech Stack -->
+        @if (project.TechStack.Count > 0)
+        {
+            <section class="detail-section">
+                <div class="section-number">06</div>
+                <div class="section-content">
+                    <h2 class="section-heading">Tech Stack</h2>
+                    <div class="stack-table">
+                        @foreach (var item in project.TechStack)
+                        {
+                            <div class="stack-row">
+                                <span class="stack-category">@item.Category</span>
+                                <span class="stack-technology">@item.Technology</span>
+                                @if (item.Note is not null)
+                                {
+                                    <span class="stack-note">@item.Note</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+
+        <!-- Target User -->
+        @if (!string.IsNullOrEmpty(project.TargetUser))
+        {
+            <section class="detail-section">
+                <div class="section-number">07</div>
+                <div class="section-content">
+                    <h2 class="section-heading">Target User</h2>
+                    <p class="section-text target-user-text">@project.TargetUser</p>
+                </div>
+            </section>
+        }
+
+        <!-- Live Health & Metrics -->
+        <section class="detail-section">
+            <div class="section-number">08</div>
+            <div class="section-content">
+                <h2 class="section-heading">Live Status</h2>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <span class="status-key">Health</span>
+                        <span class="status-value @GetHealthCss(status.Health)">@status.Health</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-key">Response Time</span>
+                        <span class="status-value">@(status.ResponseTimeMs.HasValue ? $"{status.ResponseTimeMs}ms" : "\u2014")</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-key">Last Checked</span>
+                        <span class="status-value">@FormatLastChecked(status.LastChecked)</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-key">Port</span>
+                        <span class="status-value">@(project.Port > 0 ? project.Port.ToString() : "N/A")</span>
+                    </div>
+                    @if (status.ErrorMessage is not null)
+                    {
+                        <div class="status-item full-width">
+                            <span class="status-key">Error</span>
+                            <span class="status-value error">@status.ErrorMessage</span>
+                        </div>
+                    }
+                </div>
+
+                @if (metrics is not null)
+                {
+                    <div class="metrics-row">
+                        <div class="metric-card">
+                            <span class="metric-value">@metrics.RequestsPerSecond.ToString("F2")</span>
+                            <span class="metric-label">Requests/sec</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value">@((metrics.ErrorRate * 100).ToString("F2"))%</span>
+                            <span class="metric-label">Error Rate</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value">@metrics.AvgResponseTimeMs.ToString("F1")ms</span>
+                            <span class="metric-label">Avg Latency</span>
+                        </div>
+                    </div>
+                }
             </div>
-        </div>
-    }
-    else if (!MetricsService.IsAvailable)
-    {
-        <div class="alert alert-info mt-3">
-            Prometheus is not configured. Metrics are unavailable.
-        </div>
-    }
+        </section>
+
+        <!-- Links (bottom) -->
+        <section class="detail-section links-section">
+            <div class="section-number">09</div>
+            <div class="section-content">
+                <h2 class="section-heading">Links</h2>
+                <div class="links-grid">
+                    @if (project.LiveUrl is not null)
+                    {
+                        <a href="@project.LiveUrl" target="_blank" rel="noopener" class="link-card">
+                            <span class="link-type">Live</span>
+                            <span class="link-url">@project.LiveUrl</span>
+                        </a>
+                    }
+                    @if (project.GithubUrl is not null)
+                    {
+                        <a href="@project.GithubUrl" target="_blank" rel="noopener" class="link-card">
+                            <span class="link-type">GitHub</span>
+                            <span class="link-url">@project.GithubUrl</span>
+                        </a>
+                    }
+                </div>
+            </div>
+        </section>
+    </div>
 }
 
 @code {
@@ -143,12 +303,18 @@ else
         status = StatusService.GetStatus(ProjectId);
     }
 
-    private static string GetBadgeClass(HealthState health) => health switch
+    private static int ProgressPercent(ProjectInfo project)
     {
-        HealthState.Healthy => "bg-success",
-        HealthState.Degraded => "bg-warning text-dark",
-        HealthState.Unhealthy => "bg-danger",
-        _ => "bg-secondary"
+        if (project.BuildProgress.Count == 0) return 0;
+        return (int)(100.0 * project.BuildProgress.Count(m => m.Completed) / project.BuildProgress.Count);
+    }
+
+    private static string GetHealthCss(HealthState health) => health switch
+    {
+        HealthState.Healthy => "health-ok",
+        HealthState.Degraded => "health-warn",
+        HealthState.Unhealthy => "health-err",
+        _ => "health-unknown"
     };
 
     private static string FormatLastChecked(DateTimeOffset lastChecked)
