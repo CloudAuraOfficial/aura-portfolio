@@ -338,6 +338,57 @@ public class ProjectRegistry
                 TargetUser = "Platform engineering teams and DevOps engineers at startups and mid-size companies who need a self-hosted deployment orchestration tool with proper RBAC and audit trails, without the complexity of Kubernetes.",
                 LiveUrl = "https://platform.cloudaura.cloud",
                 GithubUrl = "https://github.com/CloudAuraOfficial/aura-platform"
+            },
+            new()
+            {
+                Id = "P7",
+                Name = "n8n",
+                Description = "Self-hosted workflow automation platform — connect APIs, schedule jobs, and orchestrate integrations visually",
+                Subdomain = "n8n",
+                Stack = "n8n + PostgreSQL + Qdrant",
+                HealthUrl = settings.P7HealthUrl,
+                Port = 5678,
+                Problem = "Connecting SaaS tools, internal APIs, and AI services requires custom glue code for every integration. Teams spend weeks writing and maintaining point-to-point scripts that break silently and have no visibility into execution history.",
+                Solution = "A self-hosted n8n instance providing a visual workflow automation platform with 400+ integrations, AI-native nodes, and full execution history — enabling the CloudAura portfolio to automate cross-service orchestration, monitoring alerts, and data pipelines without custom code.",
+                CoreFeatures =
+                [
+                    "Visual workflow builder with 400+ pre-built integration nodes",
+                    "AI-native nodes for LLM chains, embeddings, and vector store operations",
+                    "Webhook triggers for real-time event-driven automation",
+                    "Cron-based scheduling for periodic workflows",
+                    "Full execution history with replay and debugging",
+                    "Qdrant vector store integration for AI-powered workflows",
+                    "PostgreSQL-backed persistence for reliable workflow state",
+                    "Self-hosted — all data stays on infrastructure"
+                ],
+                MarketSignals =
+                [
+                    "Workflow automation market projected to reach $78B by 2030 — Zapier, Make, and n8n lead the space",
+                    "n8n crossed 50K+ GitHub stars and is the fastest-growing open-source automation platform",
+                    "AI-augmented automation is the top enterprise trend — connecting LLMs to business workflows",
+                    "Self-hosted automation demand surging as companies prioritize data sovereignty"
+                ],
+                BuildProgress =
+                [
+                    new() { Label = "n8n deployment with PostgreSQL backend", Completed = true },
+                    new() { Label = "Qdrant vector store integration", Completed = true },
+                    new() { Label = "SSL termination via Nginx reverse proxy", Completed = true },
+                    new() { Label = "Docker Compose multi-service stack", Completed = true },
+                    new() { Label = "Health checks for all services", Completed = true },
+                    new() { Label = "MCP server integration with Claude Code", Completed = true },
+                    new() { Label = "Cross-portfolio workflow automation", Completed = false }
+                ],
+                TechStack =
+                [
+                    new() { Category = "Platform", Technology = "n8n", Note = "Self-hosted" },
+                    new() { Category = "Database", Technology = "PostgreSQL", Note = "Workflow persistence" },
+                    new() { Category = "Vector Store", Technology = "Qdrant", Note = "AI workflows" },
+                    new() { Category = "Proxy", Technology = "Nginx", Note = "SSL termination" },
+                    new() { Category = "Container", Technology = "Docker Compose", Note = "Multi-service" }
+                ],
+                TargetUser = "DevOps engineers and platform teams who need to automate cross-service workflows, integrate AI capabilities, and orchestrate infrastructure tasks without writing and maintaining custom integration scripts.",
+                LiveUrl = "https://n8n.cloudaura.cloud",
+                GithubUrl = null
             }
         };
     }

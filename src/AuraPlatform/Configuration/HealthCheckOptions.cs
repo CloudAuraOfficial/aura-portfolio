@@ -10,5 +10,6 @@ public class HealthCheckSettings
     public string? P4HealthUrl { get; set; }
     public string? P5HealthUrl { get; set; }
     public string? P6HealthUrl { get; set; }
+    public string? P7HealthUrl { get; set; }
     public int PollIntervalSeconds { get; set; } = 30;
 }
