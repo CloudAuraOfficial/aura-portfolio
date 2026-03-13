@@ -18,7 +18,7 @@ public class ProjectRegistry
             {
                 Id = "P1",
                 Name = "cloudaura-rag",
-                Description = "RAG-powered documentation assistant",
+                Description = "Production RAG with hybrid retrieval (BM25 + vector), cross-encoder reranking, and citation enforcement",
                 Subdomain = "ragdocs",
                 Stack = "Python / FastAPI",
                 HealthUrl = settings.P1HealthUrl,
@@ -28,16 +28,17 @@ public class ProjectRegistry
             {
                 Id = "P2",
                 Name = "cloudaura-slm",
-                Description = "Small Language Model showcase",
+                Description = "Local SLM benchmarking — run and compare models offline with Ollama",
                 Subdomain = "localllm",
-                Stack = "Static HTML",
-                Port = 0
+                Stack = "Python / FastAPI + Ollama",
+                HealthUrl = settings.P2HealthUrl,
+                Port = 8002
             },
             new()
             {
                 Id = "P3",
                 Name = "cloudaura-observe",
-                Description = "Observability stack (Grafana + Prometheus)",
+                Description = "Observability stack — Grafana dashboards, Prometheus metrics, Langfuse LLM tracing",
                 Subdomain = "observe",
                 Stack = "Grafana + Prometheus",
                 HealthUrl = settings.P3HealthUrl,
@@ -47,16 +48,17 @@ public class ProjectRegistry
             {
                 Id = "P4",
                 Name = "cloudaura-finetune",
-                Description = "Fine-tuning pipeline showcase",
+                Description = "Fine-tuning pipeline with LoRA/QLoRA + DPO for JSON extraction",
                 Subdomain = "finetune",
-                Stack = "Static HTML",
-                Port = 0
+                Stack = "Static (nginx:alpine) + Colab pipeline",
+                HealthUrl = settings.P4HealthUrl,
+                Port = 8004
             },
             new()
             {
                 Id = "P5",
                 Name = "cloudaura-voice",
-                Description = "AI Voice Agent for customer support",
+                Description = "AI voice agent — handles inbound calls with STT, LLM, and TTS via LiveKit SIP",
                 Subdomain = "voice",
                 Stack = "Python / FastAPI",
                 HealthUrl = settings.P5HealthUrl,
@@ -66,9 +68,10 @@ public class ProjectRegistry
             {
                 Id = "P6",
                 Name = "aura-platform",
-                Description = "Portfolio dashboard & service monitor",
-                Subdomain = "portfolio",
-                Stack = ".NET 8 / Blazor Server",
+                Description = "Multi-tenant infrastructure orchestration platform with RBAC, deployment pipelines, and FIFO queue",
+                Subdomain = "platform",
+                Stack = "C# / .NET 8 — ASP.NET Core Web API",
+                HealthUrl = settings.P6HealthUrl,
                 Port = 8006
             }
         };

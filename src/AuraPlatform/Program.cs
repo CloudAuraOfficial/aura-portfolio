@@ -10,8 +10,11 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.Configure<HealthCheckSettings>(settings =>
 {
     settings.P1HealthUrl = builder.Configuration["P1_HEALTH_URL"];
+    settings.P2HealthUrl = builder.Configuration["P2_HEALTH_URL"];
     settings.P3HealthUrl = builder.Configuration["P3_HEALTH_URL"];
+    settings.P4HealthUrl = builder.Configuration["P4_HEALTH_URL"];
     settings.P5HealthUrl = builder.Configuration["P5_HEALTH_URL"];
+    settings.P6HealthUrl = builder.Configuration["P6_HEALTH_URL"];
 
     if (int.TryParse(builder.Configuration["HEALTH_POLL_INTERVAL_SECONDS"], out var interval))
         settings.PollIntervalSeconds = interval;
