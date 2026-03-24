@@ -1,0 +1,89 @@
+@* SVG Architecture Diagram — renders a flow pipeline from step labels *@
+
+@if (Steps.Count > 0)
+{
+    <div class="arch-diagram-svg">
+        @((MarkupString)BuildSvg())
+    </div>
+}
+
+@code {
+    [Parameter] public List<string> Steps { get; set; } = [];
+    [Parameter] public string Id { get; set; } = "default";
+
+    private string BuildSvg()
+    {
+        var cols = Math.Min(Steps.Count, 4);
+        var rows = (int)Math.Ceiling((double)Steps.Count / cols);
+        var boxW = 190;
+        var boxH = 46;
+        var gapX = 52;
+        var gapY = 50;
+        var padX = 20;
+        var padY = 20;
+        var svgW = padX * 2 + cols * boxW + (cols - 1) * gapX;
+        var svgH = padY * 2 + rows * boxH + (rows - 1) * gapY;
+
+        var sb = new System.Text.StringBuilder();
+        sb.Append($@"<svg class=""arch-svg"" viewBox=""0 0 {svgW} {svgH}"" xmlns=""http://www.w3.org/2000/svg"">");
+
+        // Defs
+        sb.Append($@"<defs>
+            <marker id=""arr-{Id}"" viewBox=""0 0 10 7"" refX=""10"" refY=""3.5"" markerWidth=""8"" markerHeight=""6"" orient=""auto-start-auto"">
+                <path d=""M 0 0 L 10 3.5 L 0 7 z"" fill=""#a78bfa""/>
+            </marker>
+            <filter id=""shd-{Id}"" x=""-4%"" y=""-4%"" width=""108%"" height=""120%"">
+                <feDropShadow dx=""0"" dy=""2"" stdDeviation=""3"" flood-color=""#6d28d9"" flood-opacity=""0.06""/>
+            </filter>
+        </defs>");
+
+        for (var i = 0; i < Steps.Count; i++)
+        {
+            var row = i / cols;
+            var col = i % cols;
+            var x = padX + col * (boxW + gapX);
+            var y = padY + row * (boxH + gapY);
+            var cy = y + boxH / 2;
+            var label = Truncate(Steps[i], 20);
+
+            // Box
+            sb.Append($@"<rect x=""{x}"" y=""{y}"" width=""{boxW}"" height=""{boxH}"" rx=""8"" fill=""white"" stroke=""#e1e4eb"" stroke-width=""1.5"" filter=""url(#shd-{Id})"" class=""arch-box""/>");
+
+            // Number circle
+            sb.Append($@"<circle cx=""{x + 19}"" cy=""{cy}"" r=""11"" fill=""#6d28d9""/>");
+            sb.Append($@"<text x=""{x + 19}"" y=""{cy + 1}"" text-anchor=""middle"" dominant-baseline=""central"" fill=""white"" font-family=""JetBrains Mono,monospace"" font-size=""9"" font-weight=""700"">{i + 1}</text>");
+
+            // Label
+            sb.Append($@"<text x=""{x + 36}"" y=""{cy + 1}"" dominant-baseline=""central"" fill=""#0c0e14"" font-family=""JetBrains Mono,monospace"" font-size=""10.5"" font-weight=""500"">{System.Security.SecurityElement.Escape(label)}</text>");
+
+            // Arrow
+            if (i < Steps.Count - 1)
+            {
+                var nextRow = (i + 1) / cols;
+                var nextCol = (i + 1) % cols;
+
+                if (nextRow == row)
+                {
+                    var ax1 = x + boxW + 4;
+                    var ax2 = x + boxW + gapX - 4;
+                    sb.Append($@"<line x1=""{ax1}"" y1=""{cy}"" x2=""{ax2}"" y2=""{cy}"" stroke=""#a78bfa"" stroke-width=""1.5"" marker-end=""url(#arr-{Id})""/>");
+                }
+                else
+                {
+                    var fromX = x + boxW / 2;
+                    var fromY = y + boxH + 4;
+                    var toX = padX + nextCol * (boxW + gapX) + boxW / 2;
+                    var toY = padY + nextRow * (boxH + gapY) - 4;
+                    var midY = (fromY + toY) / 2;
+                    sb.Append($@"<path d=""M {fromX} {fromY} L {fromX} {midY} L {toX} {midY} L {toX} {toY}"" fill=""none"" stroke=""#a78bfa"" stroke-width=""1.5"" stroke-dasharray=""4,3"" marker-end=""url(#arr-{Id})""/>");
+                }
+            }
+        }
+
+        sb.Append("</svg>");
+        return sb.ToString();
+    }
+
+    private static string Truncate(string s, int max) =>
+        s.Length <= max ? s : s[..(max - 1)] + "\u2026";
+}

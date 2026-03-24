@@ -86,25 +86,15 @@ else
             </section>
         }
 
-        <!-- Architecture Flow -->
+        <!-- Architecture Diagram (SVG) -->
         @if (project.ArchitectureFlow.Count > 0)
         {
-            <section class="detail-section">
+            <section class="detail-section reveal">
                 <div class="section-number">03</div>
                 <div class="section-content">
                     <h2 class="section-heading">Architecture</h2>
-                    <div class="arch-flow">
-                        @for (var i = 0; i < project.ArchitectureFlow.Count; i++)
-                        {
-                            <div class="arch-step">
-                                <span class="arch-step-num">@(i + 1)</span>
-                                <span class="arch-step-label">@project.ArchitectureFlow[i]</span>
-                            </div>
-                            @if (i < project.ArchitectureFlow.Count - 1)
-                            {
-                                <div class="arch-arrow">&rarr;</div>
-                            }
-                        }
+                    <div class="arch-diagram-wrap">
+                        <ArchDiagram Steps="project.ArchitectureFlow" Id="@project.Id" />
                     </div>
                 </div>
             </section>
@@ -113,7 +103,7 @@ else
         <!-- Core Features -->
         @if (project.CoreFeatures.Count > 0)
         {
-            <section class="detail-section">
+            <section class="detail-section reveal">
                 <div class="section-number">04</div>
                 <div class="section-content">
                     <h2 class="section-heading">Core Features</h2>
@@ -130,7 +120,7 @@ else
         <!-- Engineering Decisions -->
         @if (project.Decisions.Count > 0)
         {
-            <section class="detail-section">
+            <section class="detail-section reveal">
                 <div class="section-number">05</div>
                 <div class="section-content">
                     <h2 class="section-heading">Engineering Decisions</h2>
@@ -151,11 +141,42 @@ else
             </section>
         }
 
+        <!-- Demo Video -->
+        @if (project.DemoUrl is not null)
+        {
+            <section class="detail-section reveal">
+                <div class="section-number">06</div>
+                <div class="section-content">
+                    <h2 class="section-heading">Demo</h2>
+                    <div class="demo-embed">
+                        @if (project.DemoUrl.Contains("youtube.com") || project.DemoUrl.Contains("youtu.be"))
+                        {
+                            <iframe src="@GetYouTubeEmbed(project.DemoUrl)" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen class="demo-iframe"></iframe>
+                        }
+                        else if (project.DemoUrl.Contains("loom.com"))
+                        {
+                            <iframe src="@GetLoomEmbed(project.DemoUrl)" frameborder="0"
+                                    allowfullscreen class="demo-iframe"></iframe>
+                        }
+                        else
+                        {
+                            <a href="@project.DemoUrl" target="_blank" rel="noopener" class="demo-link-card">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                <span>Watch Demo</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+
         <!-- Market Signals -->
         @if (project.MarketSignals.Count > 0)
         {
-            <section class="detail-section">
-                <div class="section-number">06</div>
+            <section class="detail-section reveal">
+                <div class="section-number">07</div>
                 <div class="section-content">
                     <h2 class="section-heading">Market Signals</h2>
                     <div class="signal-grid">
@@ -173,8 +194,8 @@ else
         <!-- Build Progress -->
         @if (project.BuildProgress.Count > 0)
         {
-            <section class="detail-section">
-                <div class="section-number">07</div>
+            <section class="detail-section reveal">
+                <div class="section-number">08</div>
                 <div class="section-content">
                     <h2 class="section-heading">Build Progress</h2>
                     <div class="progress-summary">
@@ -200,8 +221,8 @@ else
         <!-- Tech Stack -->
         @if (project.TechStack.Count > 0)
         {
-            <section class="detail-section">
-                <div class="section-number">08</div>
+            <section class="detail-section reveal">
+                <div class="section-number">09</div>
                 <div class="section-content">
                     <h2 class="section-heading">Tech Stack</h2>
                     <div class="stack-table">
@@ -224,8 +245,8 @@ else
         <!-- Target User -->
         @if (!string.IsNullOrEmpty(project.TargetUser))
         {
-            <section class="detail-section">
-                <div class="section-number">09</div>
+            <section class="detail-section reveal">
+                <div class="section-number">10</div>
                 <div class="section-content">
                     <h2 class="section-heading">Target User</h2>
                     <p class="section-text target-user-text">@project.TargetUser</p>
@@ -234,8 +255,8 @@ else
         }
 
         <!-- Live Health & Metrics -->
-        <section class="detail-section">
-            <div class="section-number">10</div>
+        <section class="detail-section reveal">
+            <div class="section-number">11</div>
             <div class="section-content">
                 <h2 class="section-heading">Live Status</h2>
                 <div class="status-grid">
@@ -285,8 +306,8 @@ else
         </section>
 
         <!-- Links (bottom) -->
-        <section class="detail-section links-section">
-            <div class="section-number">11</div>
+        <section class="detail-section links-section reveal">
+            <div class="section-number">12</div>
             <div class="section-content">
                 <h2 class="section-heading">Links</h2>
                 <div class="links-grid">
@@ -373,6 +394,22 @@ else
         if (ago.TotalSeconds < 60)
             return $"{(int)ago.TotalSeconds}s ago";
         return $"{(int)ago.TotalMinutes}m ago";
+    }
+
+    private static string GetYouTubeEmbed(string url)
+    {
+        // Extract video ID from various YouTube URL formats
+        var uri = new Uri(url);
+        var videoId = uri.Host.Contains("youtu.be")
+            ? uri.AbsolutePath.TrimStart('/')
+            : System.Web.HttpUtility.ParseQueryString(uri.Query).Get("v") ?? "";
+        return $"https://www.youtube.com/embed/{videoId}";
+    }
+
+    private static string GetLoomEmbed(string url)
+    {
+        // Convert loom.com/share/ID to loom.com/embed/ID
+        return url.Replace("/share/", "/embed/");
     }
 
     public void Dispose()

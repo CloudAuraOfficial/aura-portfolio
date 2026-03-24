@@ -265,3 +265,138 @@ h1:focus { outline: none; }
 .blazor-error-boundary::after {
     content: "An error has occurred."
 }
+
+/* ============================================================
+   Scroll Reveal Animations
+   ============================================================ */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger children */
+.reveal:nth-child(2) { transition-delay: 0.06s; }
+.reveal:nth-child(3) { transition-delay: 0.12s; }
+.reveal:nth-child(4) { transition-delay: 0.18s; }
+.reveal:nth-child(5) { transition-delay: 0.24s; }
+.reveal:nth-child(6) { transition-delay: 0.30s; }
+
+/* ============================================================
+   Architecture SVG Diagram
+   ============================================================ */
+.arch-diagram-wrap {
+    background: var(--surface-raised);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-4);
+    overflow-x: auto;
+}
+
+.arch-svg {
+    width: 100%;
+    height: auto;
+    max-height: 360px;
+}
+
+.arch-svg .arch-box {
+    transition: stroke 0.2s ease;
+}
+
+.arch-svg .arch-box:hover {
+    stroke: var(--accent);
+    stroke-width: 2;
+}
+
+/* ============================================================
+   Demo Video Embed
+   ============================================================ */
+.demo-embed {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--ink);
+    aspect-ratio: 16 / 9;
+    max-width: 640px;
+}
+
+.demo-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.demo-link-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s;
+    max-width: 640px;
+}
+
+.demo-link-card:hover {
+    background: var(--accent-light);
+    border-color: var(--accent);
+    transform: translateX(4px);
+    text-decoration: none;
+}
+
+/* ============================================================
+   Dark Mode
+   ============================================================ */
+html.dark {
+    --ink: #e2e8f0;
+    --ink-secondary: #94a3b8;
+    --ink-muted: #64748b;
+    --surface: #0c0e14;
+    --surface-raised: #151821;
+    --surface-sunken: #0a0c10;
+    --border: #1e2433;
+    --border-subtle: #161b26;
+    --accent: #8b5cf6;
+    --accent-light: rgba(139, 92, 246, 0.12);
+    --accent-text: #a78bfa;
+    --green: #34d399;
+    --green-light: rgba(52, 211, 153, 0.12);
+    --amber: #fbbf24;
+    --amber-light: rgba(251, 191, 36, 0.12);
+    --red: #f87171;
+    --red-light: rgba(248, 113, 113, 0.12);
+    --blue: #60a5fa;
+    --blue-light: rgba(96, 165, 250, 0.12);
+}
+
+html.dark body {
+    background: var(--surface);
+    color: var(--ink);
+}
+
+html.dark .table { color: var(--ink); }
+html.dark .table-dark { background: var(--surface-raised); }
+html.dark .badge { border: 1px solid var(--border); }
+
+html.dark .service-card:hover {
+    box-shadow: 0 8px 30px rgba(139, 92, 246, 0.1);
+}
+
+html.dark .arch-diagram-wrap {
+    background: var(--surface-raised);
+    border-color: var(--border);
+}
+
+html.dark .arch-svg rect { fill: var(--surface-raised); stroke: var(--border); }
+html.dark .arch-svg text { fill: var(--ink); }
+html.dark .arch-svg circle { fill: var(--accent); }

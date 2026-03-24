@@ -24,6 +24,7 @@ public record ProjectInfo
     public string Category { get; init; } = string.Empty;
     public List<string> ArchitectureFlow { get; init; } = [];
     public List<EngineeringDecision> Decisions { get; init; } = [];
+    public string? DemoUrl { get; init; }
 }
 
 public record EngineeringDecision
