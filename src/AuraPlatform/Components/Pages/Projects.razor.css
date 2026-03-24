@@ -1,0 +1,181 @@
+/* Projects page — scoped styles */
+
+.projects-page {
+    max-width: 960px;
+}
+
+.page-heading {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--ink, #0c0e14);
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+}
+
+.page-sub {
+    font-size: 0.92rem;
+    color: var(--ink-muted, #6b7084);
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border, #e1e4eb);
+}
+
+/* Card Grid */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 16px;
+}
+
+/* Card */
+.project-card {
+    background: var(--surface, #fff);
+    border: 1px solid var(--border, #e1e4eb);
+    border-radius: 12px;
+    padding: 20px 22px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.project-card:hover {
+    border-color: var(--accent, #6d28d9);
+    box-shadow: 0 8px 30px rgba(109, 40, 217, 0.08);
+    transform: translateY(-2px);
+}
+
+/* Card header */
+.pc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pc-id-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pc-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink-muted, #6b7084);
+    background: var(--surface-raised, #f7f8fa);
+    border: 1px solid var(--border-subtle, #eef0f4);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.pc-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.pc-cat.cat-ai { background: #ede9fe; color: #5b21b6; }
+.pc-cat.cat-cloud { background: #dbeafe; color: #2563eb; }
+.pc-cat.cat-infra { background: #d1fae5; color: #059669; }
+
+.pc-health {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.pc-health.health-ok { background: #d1fae5; color: #059669; }
+.pc-health.health-warn { background: #fef3c7; color: #d97706; }
+.pc-health.health-err { background: #fee2e2; color: #dc2626; }
+.pc-health.health-unk { background: #f1f5f9; color: #64748b; }
+
+/* Card body */
+.pc-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink, #0c0e14);
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.pc-desc {
+    font-size: 0.84rem;
+    color: var(--ink-secondary, #3b3f51);
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* Architecture mini-flow */
+.pc-arch {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 12px;
+    background: var(--surface-raised, #f7f8fa);
+    border: 1px solid var(--border-subtle, #eef0f4);
+    border-radius: 8px;
+}
+
+.pc-arch-step {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--ink-secondary, #3b3f51);
+    background: white;
+    border: 1px solid var(--border, #e1e4eb);
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.pc-arch-sep {
+    font-size: 0.7rem;
+    color: var(--ink-muted, #6b7084);
+}
+
+.pc-arch-more {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--accent, #6d28d9);
+    font-weight: 600;
+}
+
+/* Card footer */
+.pc-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-subtle, #eef0f4);
+}
+
+.pc-stack {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--ink-muted, #6b7084);
+}
+
+.pc-latency {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--green, #059669);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .project-grid {
+        grid-template-columns: 1fr;
+    }
+}

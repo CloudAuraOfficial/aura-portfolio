@@ -1,89 +1,92 @@
 /* Philosophy page — scoped styles */
 
 .philosophy-page {
-    max-width: 740px;
+    max-width: 720px;
 }
 
 .page-title {
+    font-family: 'Outfit', sans-serif;
     font-size: 1.8rem;
-    font-weight: 700;
-    color: #0f172a;
+    font-weight: 800;
+    color: var(--ink, #0c0e14);
     margin-bottom: 8px;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
 }
 
 .page-intro {
     font-size: 0.95rem;
-    color: #64748b;
-    line-height: 1.6;
-    margin-bottom: 32px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid #e2e8f0;
+    color: var(--ink-muted, #6b7084);
+    line-height: 1.65;
+    margin-bottom: 36px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border, #e1e4eb);
 }
 
 .principle {
     display: flex;
     gap: 24px;
-    padding: 28px 0;
-    border-bottom: 1px solid #f1f5f9;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--border-subtle, #eef0f4);
 }
 
-.principle:last-child {
-    border-bottom: none;
-}
+.principle:last-child { border-bottom: none; }
 
 .principle-num {
-    font-size: 0.72rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
     font-weight: 700;
-    color: #cbd5e1;
-    font-family: 'SF Mono', 'Cascadia Code', monospace;
+    color: #c4b5fd;
     min-width: 28px;
-    padding-top: 5px;
+    padding-top: 6px;
     flex-shrink: 0;
 }
 
 .principle-body h2 {
-    font-size: 1.1rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.15rem;
     font-weight: 700;
-    color: #0f172a;
-    margin-bottom: 10px;
+    color: var(--ink, #0c0e14);
+    margin-bottom: 12px;
     letter-spacing: -0.01em;
 }
 
 .principle-body p {
-    font-size: 0.9rem;
-    color: #475569;
-    line-height: 1.7;
-    margin-bottom: 12px;
+    font-size: 0.88rem;
+    color: var(--ink-secondary, #3b3f51);
+    line-height: 1.75;
+    margin-bottom: 14px;
 }
 
 .principle-body code {
-    font-size: 0.82rem;
-    background: #f1f5f9;
-    padding: 1px 6px;
-    border-radius: 3px;
-    color: #6d28d9;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    background: var(--accent-light, #ede9fe);
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: var(--accent-text, #5b21b6);
+    border: 1px solid #c4b5fd;
 }
 
 .principle-example {
     font-size: 0.84rem;
-    color: #64748b;
-    line-height: 1.6;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-left: 3px solid #6d28d9;
-    padding: 12px 16px;
-    border-radius: 6px;
+    color: var(--ink-muted, #6b7084);
+    line-height: 1.65;
+    background: var(--surface-raised, #f7f8fa);
+    border: 1px solid var(--border-subtle, #eef0f4);
+    border-left: 3px solid var(--accent, #6d28d9);
+    padding: 14px 18px;
+    border-radius: 8px;
 }
 
 .principle-example strong {
-    color: #475569;
+    color: var(--ink-secondary, #3b3f51);
+    font-weight: 600;
 }
 
 .principle-example em {
-    color: #6d28d9;
+    color: var(--accent-text, #5b21b6);
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 @media (max-width: 640px) {
@@ -92,11 +95,6 @@
         gap: 8px;
     }
 
-    .principle-num {
-        min-width: auto;
-    }
-
-    .page-title {
-        font-size: 1.4rem;
-    }
+    .principle-num { min-width: auto; }
+    .page-title { font-size: 1.4rem; }
 }

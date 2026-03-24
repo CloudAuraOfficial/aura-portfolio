@@ -2,46 +2,67 @@
 @using AuraPlatform.Models
 @using AuraPlatform.Services
 @inject ProjectStatusService StatusService
+@inject NavigationManager Navigation
 @implements IDisposable
 
-<PageTitle>Projects - CloudAura Portfolio</PageTitle>
+<PageTitle>Architecture - CloudAura Portfolio</PageTitle>
 
-<h1>Projects</h1>
-<p class="text-muted">All services in the CloudAura portfolio</p>
+<div class="projects-page">
+    <h1 class="page-heading">Architecture</h1>
+    <p class="page-sub">7 production systems — click any card for engineering details, architecture flows, and design decisions.</p>
 
-<div class="table-responsive mt-4">
-    <table class="table table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Stack</th>
-                <th>Subdomain</th>
-                <th>Status</th>
-                <th>Response</th>
-                <th>Last Checked</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var status in statuses)
-            {
-                <tr class="cursor-pointer" @onclick="() => Navigate(status.Project.Id)">
-                    <td><strong>@status.Project.Id</strong></td>
-                    <td>@status.Project.Name</td>
-                    <td><code>@status.Project.Stack</code></td>
-                    <td>@status.Project.Subdomain</td>
-                    <td><span class="badge @GetBadgeClass(status.Health)">@status.Health</span></td>
-                    <td>@(status.ResponseTimeMs.HasValue ? $"{status.ResponseTimeMs}ms" : "—")</td>
-                    <td>@FormatLastChecked(status.LastChecked)</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="project-grid">
+        @foreach (var status in statuses)
+        {
+            var project = status.Project;
+            <div class="project-card" @onclick="() => Navigate(project.Id)">
+                <!-- Header -->
+                <div class="pc-header">
+                    <div class="pc-id-row">
+                        <span class="pc-id">@project.Id</span>
+                        @if (!string.IsNullOrEmpty(project.Category))
+                        {
+                            <span class="pc-cat @GetCatCss(project.Category)">@project.Category</span>
+                        }
+                    </div>
+                    <span class="pc-health @GetHealthCss(status.Health)">@status.Health</span>
+                </div>
+
+                <!-- Title -->
+                <h3 class="pc-name">@project.Name</h3>
+                <p class="pc-desc">@project.Description</p>
+
+                <!-- Architecture mini-flow -->
+                @if (project.ArchitectureFlow.Count > 0)
+                {
+                    <div class="pc-arch">
+                        @for (var i = 0; i < Math.Min(project.ArchitectureFlow.Count, 5); i++)
+                        {
+                            @if (i > 0) { <span class="pc-arch-sep">&rarr;</span> }
+                            <span class="pc-arch-step">@project.ArchitectureFlow[i]</span>
+                        }
+                        @if (project.ArchitectureFlow.Count > 5)
+                        {
+                            <span class="pc-arch-sep">&rarr;</span>
+                            <span class="pc-arch-more">+@(project.ArchitectureFlow.Count - 5) more</span>
+                        }
+                    </div>
+                }
+
+                <!-- Footer -->
+                <div class="pc-footer">
+                    <span class="pc-stack">@project.Stack</span>
+                    @if (status.ResponseTimeMs.HasValue)
+                    {
+                        <span class="pc-latency">@(status.ResponseTimeMs)ms</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
 @code {
-    [Inject] private NavigationManager Navigation { get; set; } = default!;
-
     private IReadOnlyList<ProjectStatus> statuses = Array.Empty<ProjectStatus>();
 
     protected override void OnInitialized()
@@ -69,23 +90,21 @@
         Navigation.NavigateTo($"projects/{projectId}");
     }
 
-    private static string GetBadgeClass(HealthState health) => health switch
+    private static string GetHealthCss(HealthState h) => h switch
     {
-        HealthState.Healthy => "bg-success",
-        HealthState.Degraded => "bg-warning text-dark",
-        HealthState.Unhealthy => "bg-danger",
-        _ => "bg-secondary"
+        HealthState.Healthy => "health-ok",
+        HealthState.Degraded => "health-warn",
+        HealthState.Unhealthy => "health-err",
+        _ => "health-unk"
     };
 
-    private static string FormatLastChecked(DateTimeOffset lastChecked)
+    private static string GetCatCss(string c) => c switch
     {
-        if (lastChecked == DateTimeOffset.MinValue)
-            return "Never";
-        var ago = DateTimeOffset.UtcNow - lastChecked;
-        if (ago.TotalSeconds < 60)
-            return $"{(int)ago.TotalSeconds}s ago";
-        return $"{(int)ago.TotalMinutes}m ago";
-    }
+        "AI" => "cat-ai",
+        "Cloud" => "cat-cloud",
+        "Infrastructure" => "cat-infra",
+        _ => ""
+    };
 
     public void Dispose()
     {

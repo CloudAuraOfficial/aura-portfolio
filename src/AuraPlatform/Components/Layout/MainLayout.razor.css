@@ -9,7 +9,7 @@ main {
 }
 
 .sidebar {
-    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    background: #0c0e14;
 }
 
 .content {
@@ -22,7 +22,7 @@ main {
     }
 
     .sidebar {
-        width: 250px;
+        width: 240px;
         height: 100vh;
         position: sticky;
         top: 0;
@@ -41,10 +41,11 @@ main {
     width: 100%;
     z-index: 1000;
     font-size: 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
 }
 
 #blazor-error-ui .reload {
-    color: #60a5fa;
+    color: #818cf8;
     margin-left: 0.5rem;
 }
 
@@ -56,9 +57,7 @@ main {
     color: #94a3b8;
 }
 
-#components-reconnect-modal {
-    display: none;
-}
+#components-reconnect-modal { display: none; }
 
 #components-reconnect-modal.components-reconnect-show,
 #components-reconnect-modal.components-reconnect-failed,
@@ -70,16 +69,19 @@ main {
     position: fixed;
     inset: 0;
     z-index: 10000;
-    background: rgba(15, 23, 42, 0.8);
+    background: rgba(12, 14, 20, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(4px);
 }
 
 .reconnect-content {
     background: #1e293b;
     color: #e2e8f0;
     padding: 1.5rem 2rem;
-    border-radius: 0.5rem;
-    font-size: 0.95rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-family: 'JetBrains Mono', monospace;
+    border: 1px solid #334155;
 }
