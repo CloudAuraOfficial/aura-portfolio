@@ -86,11 +86,35 @@ else
             </section>
         }
 
+        <!-- Architecture Flow -->
+        @if (project.ArchitectureFlow.Count > 0)
+        {
+            <section class="detail-section">
+                <div class="section-number">03</div>
+                <div class="section-content">
+                    <h2 class="section-heading">Architecture</h2>
+                    <div class="arch-flow">
+                        @for (var i = 0; i < project.ArchitectureFlow.Count; i++)
+                        {
+                            <div class="arch-step">
+                                <span class="arch-step-num">@(i + 1)</span>
+                                <span class="arch-step-label">@project.ArchitectureFlow[i]</span>
+                            </div>
+                            @if (i < project.ArchitectureFlow.Count - 1)
+                            {
+                                <div class="arch-arrow">&rarr;</div>
+                            }
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+
         <!-- Core Features -->
         @if (project.CoreFeatures.Count > 0)
         {
             <section class="detail-section">
-                <div class="section-number">03</div>
+                <div class="section-number">04</div>
                 <div class="section-content">
                     <h2 class="section-heading">Core Features</h2>
                     <ul class="feature-list">
@@ -103,11 +127,35 @@ else
             </section>
         }
 
+        <!-- Engineering Decisions -->
+        @if (project.Decisions.Count > 0)
+        {
+            <section class="detail-section">
+                <div class="section-number">05</div>
+                <div class="section-content">
+                    <h2 class="section-heading">Engineering Decisions</h2>
+                    <div class="decisions-list">
+                        @foreach (var d in project.Decisions)
+                        {
+                            <div class="decision-card">
+                                <h4 class="decision-title">@d.Title</h4>
+                                <div class="decision-body">
+                                    <span class="decision-chose">Chose @d.Chose</span>
+                                    <span class="decision-over">over @d.Over</span>
+                                </div>
+                                <p class="decision-because">@d.Because</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+
         <!-- Market Signals -->
         @if (project.MarketSignals.Count > 0)
         {
             <section class="detail-section">
-                <div class="section-number">04</div>
+                <div class="section-number">06</div>
                 <div class="section-content">
                     <h2 class="section-heading">Market Signals</h2>
                     <div class="signal-grid">
@@ -126,7 +174,7 @@ else
         @if (project.BuildProgress.Count > 0)
         {
             <section class="detail-section">
-                <div class="section-number">05</div>
+                <div class="section-number">07</div>
                 <div class="section-content">
                     <h2 class="section-heading">Build Progress</h2>
                     <div class="progress-summary">
@@ -153,7 +201,7 @@ else
         @if (project.TechStack.Count > 0)
         {
             <section class="detail-section">
-                <div class="section-number">06</div>
+                <div class="section-number">08</div>
                 <div class="section-content">
                     <h2 class="section-heading">Tech Stack</h2>
                     <div class="stack-table">
@@ -177,7 +225,7 @@ else
         @if (!string.IsNullOrEmpty(project.TargetUser))
         {
             <section class="detail-section">
-                <div class="section-number">07</div>
+                <div class="section-number">09</div>
                 <div class="section-content">
                     <h2 class="section-heading">Target User</h2>
                     <p class="section-text target-user-text">@project.TargetUser</p>
@@ -187,7 +235,7 @@ else
 
         <!-- Live Health & Metrics -->
         <section class="detail-section">
-            <div class="section-number">08</div>
+            <div class="section-number">10</div>
             <div class="section-content">
                 <h2 class="section-heading">Live Status</h2>
                 <div class="status-grid">
@@ -238,7 +286,7 @@ else
 
         <!-- Links (bottom) -->
         <section class="detail-section links-section">
-            <div class="section-number">09</div>
+            <div class="section-number">11</div>
             <div class="section-content">
                 <h2 class="section-heading">Links</h2>
                 <div class="links-grid">

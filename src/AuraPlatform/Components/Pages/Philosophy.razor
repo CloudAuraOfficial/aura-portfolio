@@ -1,0 +1,112 @@
+@page "/philosophy"
+
+<PageTitle>Engineering Philosophy - CloudAura Portfolio</PageTitle>
+
+<div class="philosophy-page">
+    <h1 class="page-title">How I Think About Systems</h1>
+    <p class="page-intro">The decisions behind the code matter more than the code itself. Here's how I approach building.</p>
+
+    <section class="principle">
+        <div class="principle-num">01</div>
+        <div class="principle-body">
+            <h2>Bet on reversibility, not perfection</h2>
+            <p>
+                Every technical decision has a reversal cost. If it's cheap to undo (swap a library, change an env var),
+                decide fast and move on. If it's expensive (data model, auth architecture, infrastructure topology),
+                slow down and validate. I sort every decision into this matrix before committing.
+            </p>
+            <div class="principle-example">
+                <strong>In practice:</strong> P6's credential storage uses AES-256 with per-tenant keys instead of
+                HashiCorp Vault. Vault is better at scale, but the reversal cost of adopting it early (operational
+                complexity, extra container, learning curve) exceeds the risk of AES-256 at this stage.
+                When scale demands Vault, the encryption interface is abstracted — the swap is a config change.
+            </div>
+        </div>
+    </section>
+
+    <section class="principle">
+        <div class="principle-num">02</div>
+        <div class="principle-body">
+            <h2>Every choice needs a "because"</h2>
+            <p>
+                A tech stack is not an architecture. "We use Redis" means nothing. "We use Redis pub/sub for log
+                streaming because it was already in the stack for caching, adding zero infrastructure cost, and
+                logs are also persisted to PostgreSQL so we don't need durable transport" — that's an architecture decision.
+            </p>
+            <div class="principle-example">
+                <strong>In practice:</strong> Every project page on this site includes an Engineering Decisions section
+                with the format: <em>Chose X over Y because Z.</em> If I can't articulate the "because," I haven't
+                thought hard enough.
+            </div>
+        </div>
+    </section>
+
+    <section class="principle">
+        <div class="principle-num">03</div>
+        <div class="principle-body">
+            <h2>Build the cheapest test first</h2>
+            <p>
+                Before building a system, build the smallest version that tests the core assumption. A health
+                endpoint before a dashboard. A CLI script before an API. A single integration test before a
+                test suite. The goal is to find out if the approach is wrong before investing in making it right.
+            </p>
+            <div class="principle-example">
+                <strong>In practice:</strong> P1's RAG pipeline started as a single Python script that chunked one
+                document and queried it. The full hybrid retrieval, reranking, and evaluation pipeline came after
+                the basic approach proved that local inference produced usable answers.
+            </div>
+        </div>
+    </section>
+
+    <section class="principle">
+        <div class="principle-num">04</div>
+        <div class="principle-body">
+            <h2>Observe everything, alert on what matters</h2>
+            <p>
+                Every service exposes <code>/metrics</code> and <code>/health</code>. Prometheus scrapes all of them.
+                Grafana visualizes all of them. But alerts fire only on conditions that require action — not on
+                every metric that changes. Noisy alerts train you to ignore alerts.
+            </p>
+            <div class="principle-example">
+                <strong>In practice:</strong> P3 monitors all 7 services but only alerts on: service down,
+                error rate above 5%, response time above 5 seconds, disk usage above 80%, and SSL certificates
+                expiring within 14 days. Everything else is visible in dashboards but doesn't page anyone.
+            </div>
+        </div>
+    </section>
+
+    <section class="principle">
+        <div class="principle-num">05</div>
+        <div class="principle-body">
+            <h2>Abstract at boundaries, not everywhere</h2>
+            <p>
+                Provider abstraction matters where vendor lock-in is real — LLM providers, TTS engines,
+                vector stores, cloud services. It doesn't matter for internal utilities where the implementation
+                will never change. Over-abstraction adds indirection without value.
+            </p>
+            <div class="principle-example">
+                <strong>In practice:</strong> P5's TTS provider is abstracted behind an interface (swap OpenAI
+                for ElevenLabs via env var). But the FastAPI routing layer is not abstracted — it will always
+                be FastAPI. The abstraction exists where the change is likely, not where the architecture diagram
+                looks symmetrical.
+            </div>
+        </div>
+    </section>
+
+    <section class="principle">
+        <div class="principle-num">06</div>
+        <div class="principle-body">
+            <h2>Ship, then improve — but always ship working</h2>
+            <p>
+                Every commit leaves the system in a runnable state. No "WIP" commits that break the build.
+                No features half-implemented behind flags. If it's not ready to run, it's not ready to commit.
+                This isn't perfectionism — it's the discipline of keeping the main branch deployable at all times.
+            </p>
+            <div class="principle-example">
+                <strong>In practice:</strong> P6 has 121 passing tests and a CI/CD pipeline that runs build, test,
+                and deploy on every push. A commit that breaks a test doesn't reach production. The cost of this
+                discipline is 10 minutes per commit. The cost of not having it is hours of debugging broken deployments.
+            </div>
+        </div>
+    </section>
+</div>

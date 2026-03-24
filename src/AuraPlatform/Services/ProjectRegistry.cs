@@ -69,7 +69,14 @@ public class ProjectRegistry
                 LiveUrl = "https://ragdocs.cloudaura.cloud",
                 GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-rag",
                 Highlight = "Hybrid BM25 + Vector retrieval with cross-encoder reranking",
-                Category = "AI"
+                Category = "AI",
+                ArchitectureFlow = ["Document Upload", "Recursive Chunking (512 tokens)", "Dual Index (BM25 + ChromaDB)", "Query", "Hybrid Retrieval + RRF", "Cross-Encoder Reranking", "Ollama phi3:mini Generation", "Cited Answer"],
+                Decisions =
+                [
+                    new() { Title = "Retrieval Strategy", Chose = "Hybrid BM25 + Vector with Reciprocal Rank Fusion", Over = "Vector-only retrieval", Because = "Keyword search catches exact term matches that embedding models miss (acronyms, error codes, config keys). Hybrid improves recall by 15\u201330% on technical documentation benchmarks." },
+                    new() { Title = "Reranking", Chose = "Cross-encoder (ms-marco-MiniLM)", Over = "No reranking or LLM-based reranking", Because = "Bi-encoders trade precision for speed at retrieval time. A cross-encoder reranker restores precision on the top-k results without the latency cost of running every chunk through an LLM." },
+                    new() { Title = "LLM Inference", Chose = "Local Ollama (phi3:mini)", Over = "OpenAI API", Because = "Zero data leaves the server. No API costs, no rate limits, no vendor dependency. Acceptable latency for internal documentation use cases." }
+                ]
             },
             new()
             {
@@ -121,7 +128,13 @@ public class ProjectRegistry
                 LiveUrl = "https://localllm.cloudaura.cloud",
                 GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-slm",
                 Highlight = "Multi-model benchmarking on local hardware via Ollama",
-                Category = "AI"
+                Category = "AI",
+                ArchitectureFlow = ["Model Selection", "Standardized Prompts", "Ollama Inference", "Metrics Collection (TPS, TTFT, Latency)", "Side-by-Side Comparison", "Dashboard"],
+                Decisions =
+                [
+                    new() { Title = "Runtime", Chose = "Ollama", Over = "vLLM or llama.cpp directly", Because = "Ollama provides a clean HTTP API, handles model management (pull/run/delete), and supports hot-swapping models without restarting. Lower setup friction for benchmarking multiple models." },
+                    new() { Title = "Benchmarking Approach", Chose = "Standardized prompt sets with hardware-aware metrics", Over = "Ad-hoc testing per model", Because = "Reproducibility requires identical prompts, identical hardware, and identical measurement methodology. Ad-hoc testing produces incomparable results." }
+                ]
             },
             new()
             {
@@ -174,7 +187,13 @@ public class ProjectRegistry
                 LiveUrl = "https://observe.cloudaura.cloud",
                 GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-observe",
                 Highlight = "Prometheus + Grafana + Langfuse LLM tracing",
-                Category = "Infrastructure"
+                Category = "Infrastructure",
+                ArchitectureFlow = ["Services expose /metrics", "Prometheus scrapes (30s)", "Node Exporter (host metrics)", "Grafana dashboards (auto-provisioned)", "Alert rules evaluate", "Langfuse traces LLM calls"],
+                Decisions =
+                [
+                    new() { Title = "Metrics Stack", Chose = "Prometheus + Grafana", Over = "Datadog, New Relic, or ELK", Because = "Self-hosted, zero cost, battle-tested at scale. Full control over data retention and alert rules. No vendor lock-in or per-host pricing." },
+                    new() { Title = "LLM Observability", Chose = "Self-hosted Langfuse", Over = "LangSmith or no LLM tracing", Because = "LLM calls need specialized tracing (prompt/completion pairs, token counts, latency per step). Langfuse is open-source and self-hostable, keeping all data on-premises." }
+                ]
             },
             new()
             {
@@ -225,7 +244,13 @@ public class ProjectRegistry
                 LiveUrl = "https://finetune.cloudaura.cloud",
                 GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-finetune",
                 Highlight = "LoRA/QLoRA + DPO alignment \u2014 87.5% JSON accuracy",
-                Category = "AI"
+                Category = "AI",
+                ArchitectureFlow = ["Training Data Curation", "LoRA/QLoRA Fine-Tuning", "DPO Alignment", "Evaluation Benchmarks", "Schema Validation", "Documentation Site"],
+                Decisions =
+                [
+                    new() { Title = "Fine-Tuning Method", Chose = "LoRA/QLoRA (parameter-efficient)", Over = "Full fine-tuning", Because = "QLoRA reduces VRAM requirements by 4\u201310x while achieving comparable quality. Enables training on a free Colab T4 GPU instead of requiring A100s." },
+                    new() { Title = "Alignment", Chose = "DPO (Direct Preference Optimization)", Over = "RLHF", Because = "DPO is simpler (no reward model needed), more stable during training, and produces comparable alignment quality. Fewer moving parts means fewer failure modes." }
+                ]
             },
             new()
             {
@@ -280,7 +305,14 @@ public class ProjectRegistry
                 LiveUrl = "https://voice.cloudaura.cloud",
                 GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-voice",
                 Highlight = "Live SIP calls \u2014 STT \u2192 LLM \u2192 TTS in sub-second latency",
-                Category = "AI"
+                Category = "AI",
+                ArchitectureFlow = ["Inbound Phone Call", "LiveKit SIP Trunk", "Real-time STT (Deepgram)", "LLM Reasoning (GPT-4)", "Neural TTS (OpenAI/ElevenLabs)", "Voice Response", "Call Log \u2192 Airtable"],
+                Decisions =
+                [
+                    new() { Title = "Real-time Transport", Chose = "LiveKit SIP Trunk", Over = "Twilio or raw WebRTC", Because = "LiveKit provides a unified SDK for SIP + WebRTC + room management. Lower latency than Twilio's media streams, and the Agents SDK handles the voice pipeline orchestration natively." },
+                    new() { Title = "TTS Provider", Chose = "Configurable (OpenAI / ElevenLabs)", Over = "Single provider", Because = "ElevenLabs has superior voice quality but websocket limitations on the free tier. OpenAI TTS (nova) is reliable and fast. Provider abstraction lets us switch without code changes." },
+                    new() { Title = "Call Logging", Chose = "Airtable", Over = "PostgreSQL", Because = "Airtable provides a free, browsable UI for reviewing call transcripts without building an admin dashboard. For a voice agent handling low volume, the simplicity outweighs the scalability tradeoff." }
+                ]
             },
             new()
             {
@@ -349,7 +381,14 @@ public class ProjectRegistry
                 LiveUrl = "https://platform.cloudaura.cloud",
                 GithubUrl = "https://github.com/CloudAuraOfficial/aura-platform",
                 Highlight = "121 tests \u2022 RBAC \u2022 Topo-sort pipelines \u2022 AES-256 encryption",
-                Category = "Cloud"
+                Category = "Cloud",
+                ArchitectureFlow = ["API Request (JWT)", "Controller \u2192 Service Layer", "EF Core \u2192 PostgreSQL", "Essence \u2192 Snapshot", "Topo Sort \u2192 Layer Queue", "Executor Dispatch (pwsh/py/cs)", "Redis Pub/Sub Logs", "Dashboard"],
+                Decisions =
+                [
+                    new() { Title = "Execution Order", Chose = "Topological sort for layer dependencies", Over = "Sequential or user-defined order", Because = "Infrastructure layers have implicit dependencies (network before VM, VM before app). Topo sort resolves these automatically and fails early on circular dependencies instead of failing mid-deployment." },
+                    new() { Title = "Log Streaming", Chose = "Redis pub/sub", Over = "RabbitMQ or polling", Because = "Logs are also persisted to PostgreSQL, so durability isn't needed in the transport layer. Redis was already in the stack for caching, so pub/sub added zero infrastructure cost. Polling would add latency and database load." },
+                    new() { Title = "Credential Storage", Chose = "AES-256-CBC with per-tenant keys (BYOS)", Over = "HashiCorp Vault or plaintext with access control", Because = "Vault adds operational complexity disproportionate to the deployment scale. Plaintext is unacceptable. AES-256 with tenant-scoped keys provides encryption at rest without an external dependency." }
+                ]
             },
             new()
             {
@@ -402,7 +441,13 @@ public class ProjectRegistry
                 LiveUrl = "https://n8n.cloudaura.cloud",
                 GithubUrl = null,
                 Highlight = "Visual workflow automation with AI-native nodes + Qdrant",
-                Category = "Infrastructure"
+                Category = "Infrastructure",
+                ArchitectureFlow = ["Trigger (Cron/Webhook/Manual)", "Logic Nodes (HTTP, Code, AI)", "Conditional Branching", "Output (Notification/Store/API)", "Error Handler", "Execution Log \u2192 PostgreSQL"],
+                Decisions =
+                [
+                    new() { Title = "Automation Platform", Chose = "Self-hosted n8n", Over = "Zapier or Make", Because = "Self-hosted means zero per-execution costs, full data control, and no workflow limits. n8n's AI-native nodes (LLM chains, vector store ops) support the portfolio's AI-first architecture." },
+                    new() { Title = "Vector Store", Chose = "Qdrant (self-hosted)", Over = "Pinecone or Weaviate Cloud", Because = "Co-located with n8n on the same VPS for minimal latency. No external API calls for vector operations. Qdrant's gRPC interface is faster than HTTP-based alternatives for high-frequency embedding lookups." }
+                ]
             }
         };
     }

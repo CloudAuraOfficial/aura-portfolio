@@ -22,6 +22,16 @@ public record ProjectInfo
     public string? GithubUrl { get; init; }
     public string Highlight { get; init; } = string.Empty;
     public string Category { get; init; } = string.Empty;
+    public List<string> ArchitectureFlow { get; init; } = [];
+    public List<EngineeringDecision> Decisions { get; init; } = [];
+}
+
+public record EngineeringDecision
+{
+    public required string Title { get; init; }
+    public required string Chose { get; init; }
+    public required string Over { get; init; }
+    public required string Because { get; init; }
 }
 
 public record BuildMilestone

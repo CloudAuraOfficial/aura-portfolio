@@ -502,6 +502,105 @@
     font-family: 'SF Mono', 'Cascadia Code', monospace;
 }
 
+/* Architecture Flow */
+.arch-flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 16px 0;
+}
+
+.arch-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 14px;
+}
+
+.arch-step-num {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: white;
+    background: #6d28d9;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.arch-step-label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #1e293b;
+    white-space: nowrap;
+}
+
+.arch-arrow {
+    color: #94a3b8;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* Engineering Decisions */
+.decisions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.decision-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid #6d28d9;
+    border-radius: 8px;
+    padding: 16px 20px;
+}
+
+.decision-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.decision-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.decision-chose {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #15803d;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 3px 10px;
+    border-radius: 4px;
+}
+
+.decision-over {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.decision-because {
+    font-size: 0.84rem;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
     .detail-section {
