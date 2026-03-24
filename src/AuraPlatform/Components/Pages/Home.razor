@@ -6,45 +6,35 @@
 
 <PageTitle>CloudAura Portfolio</PageTitle>
 
-<h1>Portfolio Dashboard</h1>
-<p class="text-muted">Real-time status of all CloudAura services</p>
-
-<div class="row mt-4">
-    <div class="col-md-3">
-        <div class="card summary-card bg-success text-white mb-3">
-            <div class="card-body text-center">
-                <h2>@healthyCount</h2>
-                <p class="mb-0">Healthy</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card summary-card bg-warning text-dark mb-3">
-            <div class="card-body text-center">
-                <h2>@degradedCount</h2>
-                <p class="mb-0">Degraded</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card summary-card bg-danger text-white mb-3">
-            <div class="card-body text-center">
-                <h2>@unhealthyCount</h2>
-                <p class="mb-0">Unhealthy</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card summary-card bg-secondary text-white mb-3">
-            <div class="card-body text-center">
-                <h2>@unknownCount</h2>
-                <p class="mb-0">Unknown</p>
-            </div>
-        </div>
+<!-- Hero -->
+<div class="hero">
+    <h1 class="hero-title">I build AI-native cloud systems.</h1>
+    <p class="hero-sub">@statuses.Count production services. Everything you see is live.</p>
+    <div class="hero-tags">
+        <span class="hero-tag ai">@aiCount AI Systems</span>
+        <span class="hero-tag cloud">@cloudCount Cloud Platform</span>
+        <span class="hero-tag infra">@infraCount Infrastructure</span>
     </div>
 </div>
 
-<h3 class="mt-4">Services</h3>
+<!-- Summary bar -->
+<div class="summary-bar">
+    <div class="summary-item ok">
+        <span class="summary-count">@healthyCount</span>
+        <span class="summary-label">Healthy</span>
+    </div>
+    <div class="summary-item warn">
+        <span class="summary-count">@degradedCount</span>
+        <span class="summary-label">Degraded</span>
+    </div>
+    <div class="summary-item err">
+        <span class="summary-count">@unhealthyCount</span>
+        <span class="summary-label">Unhealthy</span>
+    </div>
+</div>
+
+<!-- Services -->
+<h3 class="section-title">Systems</h3>
 <div class="row mt-3">
     @foreach (var status in statuses)
     {
@@ -53,16 +43,26 @@
                 <div class="card service-card h-100">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h5 class="card-title mb-0">@status.Project.Id</h5>
+                            <div class="d-flex align-items-center gap-2">
+                                <h5 class="card-title mb-0">@status.Project.Id</h5>
+                                @if (!string.IsNullOrEmpty(status.Project.Category))
+                                {
+                                    <span class="category-tag @GetCategoryCss(status.Project.Category)">@status.Project.Category</span>
+                                }
+                            </div>
                             <span class="badge @GetBadgeClass(status.Health)">@status.Health</span>
                         </div>
                         <h6 class="card-subtitle text-muted">@status.Project.Name</h6>
                         <p class="card-text mt-2 small">@status.Project.Description</p>
-                        <div class="d-flex justify-content-between small text-muted">
+                        @if (!string.IsNullOrEmpty(status.Project.Highlight))
+                        {
+                            <p class="card-highlight">@status.Project.Highlight</p>
+                        }
+                        <div class="d-flex justify-content-between small text-muted mt-auto">
                             <span>@status.Project.Stack</span>
                             @if (status.ResponseTimeMs.HasValue)
                             {
-                                <span>@(status.ResponseTimeMs)ms</span>
+                                <span class="response-time">@(status.ResponseTimeMs)ms</span>
                             }
                         </div>
                     </div>
@@ -77,7 +77,9 @@
     private int healthyCount;
     private int degradedCount;
     private int unhealthyCount;
-    private int unknownCount;
+    private int aiCount;
+    private int cloudCount;
+    private int infraCount;
 
     protected override void OnInitialized()
     {
@@ -100,7 +102,9 @@
         healthyCount = statuses.Count(s => s.Health == HealthState.Healthy);
         degradedCount = statuses.Count(s => s.Health == HealthState.Degraded);
         unhealthyCount = statuses.Count(s => s.Health == HealthState.Unhealthy);
-        unknownCount = statuses.Count(s => s.Health == HealthState.Unknown);
+        aiCount = statuses.Count(s => s.Project.Category == "AI");
+        cloudCount = statuses.Count(s => s.Project.Category == "Cloud");
+        infraCount = statuses.Count(s => s.Project.Category == "Infrastructure");
     }
 
     private static string GetBadgeClass(HealthState health) => health switch
@@ -109,6 +113,14 @@
         HealthState.Degraded => "bg-warning text-dark",
         HealthState.Unhealthy => "bg-danger",
         _ => "bg-secondary"
+    };
+
+    private static string GetCategoryCss(string category) => category switch
+    {
+        "AI" => "cat-ai",
+        "Cloud" => "cat-cloud",
+        "Infrastructure" => "cat-infra",
+        _ => ""
     };
 
     public void Dispose()

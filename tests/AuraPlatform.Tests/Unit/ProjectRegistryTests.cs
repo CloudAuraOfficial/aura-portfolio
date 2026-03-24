@@ -22,10 +22,10 @@ public class ProjectRegistryTests
     }
 
     [Fact]
-    public void GetAll_ReturnsSixProjects()
+    public void GetAll_ReturnsSevenProjects()
     {
         var projects = _registry.GetAll();
-        Assert.Equal(6, projects.Count);
+        Assert.Equal(7, projects.Count);
     }
 
     [Theory]

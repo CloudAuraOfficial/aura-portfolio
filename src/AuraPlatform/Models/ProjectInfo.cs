@@ -20,6 +20,8 @@ public record ProjectInfo
     public string TargetUser { get; init; } = string.Empty;
     public string? LiveUrl { get; init; }
     public string? GithubUrl { get; init; }
+    public string Highlight { get; init; } = string.Empty;
+    public string Category { get; init; } = string.Empty;
 }
 
 public record BuildMilestone

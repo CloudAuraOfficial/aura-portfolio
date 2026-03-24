@@ -67,7 +67,9 @@ public class ProjectRegistry
                 ],
                 TargetUser = "Engineering teams and DevOps orgs with large documentation sets (runbooks, wikis, internal knowledge bases) who need instant, cited answers without sending data to external APIs.",
                 LiveUrl = "https://ragdocs.cloudaura.cloud",
-                GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-rag"
+                GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-rag",
+                Highlight = "Hybrid BM25 + Vector retrieval with cross-encoder reranking",
+                Category = "AI"
             },
             new()
             {
@@ -117,7 +119,9 @@ public class ProjectRegistry
                 ],
                 TargetUser = "ML engineers, DevOps teams, and AI startups evaluating which small language model to deploy on-premises or at the edge, who need reproducible performance data without cloud dependencies.",
                 LiveUrl = "https://localllm.cloudaura.cloud",
-                GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-slm"
+                GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-slm",
+                Highlight = "Multi-model benchmarking on local hardware via Ollama",
+                Category = "AI"
             },
             new()
             {
@@ -168,7 +172,9 @@ public class ProjectRegistry
                 ],
                 TargetUser = "Platform engineers and SREs managing AI/ML services in production who need a single pane of glass for both traditional infrastructure metrics and LLM-specific observability.",
                 LiveUrl = "https://observe.cloudaura.cloud",
-                GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-observe"
+                GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-observe",
+                Highlight = "Prometheus + Grafana + Langfuse LLM tracing",
+                Category = "Infrastructure"
             },
             new()
             {
@@ -217,7 +223,9 @@ public class ProjectRegistry
                 ],
                 TargetUser = "ML engineers and data scientists who need reliable structured output from LLMs and want a proven, reproducible fine-tuning pipeline they can adapt to their own extraction tasks.",
                 LiveUrl = "https://finetune.cloudaura.cloud",
-                GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-finetune"
+                GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-finetune",
+                Highlight = "LoRA/QLoRA + DPO alignment \u2014 87.5% JSON accuracy",
+                Category = "AI"
             },
             new()
             {
@@ -270,7 +278,9 @@ public class ProjectRegistry
                 ],
                 TargetUser = "Startups and businesses that want to automate inbound phone calls — customer support, appointment scheduling, intake forms — with an AI agent that sounds natural and logs every interaction.",
                 LiveUrl = "https://voice.cloudaura.cloud",
-                GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-voice"
+                GithubUrl = "https://github.com/CloudAuraOfficial/cloudaura-voice",
+                Highlight = "Live SIP calls \u2014 STT \u2192 LLM \u2192 TTS in sub-second latency",
+                Category = "AI"
             },
             new()
             {
@@ -337,7 +347,9 @@ public class ProjectRegistry
                 ],
                 TargetUser = "Platform engineering teams and DevOps engineers at startups and mid-size companies who need a self-hosted deployment orchestration tool with proper RBAC and audit trails, without the complexity of Kubernetes.",
                 LiveUrl = "https://platform.cloudaura.cloud",
-                GithubUrl = "https://github.com/CloudAuraOfficial/aura-platform"
+                GithubUrl = "https://github.com/CloudAuraOfficial/aura-platform",
+                Highlight = "121 tests \u2022 RBAC \u2022 Topo-sort pipelines \u2022 AES-256 encryption",
+                Category = "Cloud"
             },
             new()
             {
@@ -388,7 +400,9 @@ public class ProjectRegistry
                 ],
                 TargetUser = "DevOps engineers and platform teams who need to automate cross-service workflows, integrate AI capabilities, and orchestrate infrastructure tasks without writing and maintaining custom integration scripts.",
                 LiveUrl = "https://n8n.cloudaura.cloud",
-                GithubUrl = null
+                GithubUrl = null,
+                Highlight = "Visual workflow automation with AI-native nodes + Qdrant",
+                Category = "Infrastructure"
             }
         };
     }
