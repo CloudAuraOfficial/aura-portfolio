@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: aura_platform
+    mem_limit: 512m
     network_mode: host
     env_file:
       - .env
